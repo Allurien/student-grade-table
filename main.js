@@ -9,6 +9,7 @@ function initializeApp(){
           $('#mainTable').append(`<tr class="noData"><td><h1>User Info Unavailable</h1></td></tr>`);
     }
     handleGetDataClick();
+    $('#updateModal').modal();
 }
 
 //----------------------------------------->
@@ -41,6 +42,7 @@ function addStudent(){
       }).catch(function(error) {
           console.error("Error adding student: ", error);
       });
+      $('label, input').removeClass('active valid');
 }
 function addExternalDataStudent(students){
     for(studentIndex = 0; studentIndex < students.length; studentIndex++ ){
@@ -58,17 +60,16 @@ function renderStudentOnDom(studentObj){
     $('#mainTable').append(`<tr></tr>`);
     $('#mainTable tr:last-child').append(`<td>${studentObj.name}</td><td>${studentObj.subject}</td><td>${studentObj.grade}</td>`);
     var updateData = $('<td>');
-    var updateButton = $('<button>').addClass('btn btn-primary update').text('Update');
+    var updateButton = $('<button>').addClass('btn btn-small update blue lighten-1').text('Update').attr('studentID', studentObj.id);
     updateButton.on('click', function(){
-          var arrayPosition = student_array.indexOf(studentObj);
-          student_array.splice(arrayPosition, 1);
-          $(this).parents('tr').remove();
-          calculateGradeAverage(student_array);
-          updateStudentData(studentObj.id, studentObj);
+        $('#updateModal').modal('open');  
+        $('#studentNameUpdate').val(studentObj.name).addClass('active');
+        $('#subjectUpdate').val(studentObj.subject).addClass('active');
+        $('#studentGradeUpdate').val(studentObj.grade).addClass('active');
     });
     updateData.append(updateButton);
     var deleteData = $('<td>');
-    var deleteButton = $('<button>').addClass('btn btn-danger delete').text('Delete');
+    var deleteButton = $('<button>').addClass('btn btn-small delete red darken-1').text('Delete');
     deleteButton.on('click', function(){
           var arrayPosition = student_array.indexOf(studentObj);
           student_array.splice(arrayPosition, 1);
@@ -87,10 +88,26 @@ function deleteStudentData(student){
           console.error("Error removing student: ", error);
       });
 }
-function updateStudentData(studentID, studentObj){
-    var student = firestore.collection('students').doc(studentID); 
+function updateButton(){
+    var name = $('#studentNameUpdate').val();
+    var subject = $('#subjectUpdate').val();
+    var grade = parseInt($('#studentGradeUpdate').val());
+    var id = $('button.update').attr('studentID');
+    var updatedStudent = {
+        name: name,
+        subject: subject,
+        grade: grade,
+        id: id
+    }
+    updateStudentData(updatedStudent);
+    handleGetDataClick();
+    $('#updateModal').modal('close');
+    updateStudentList(student_array);
+}
+function updateStudentData(studentObj){
+    var student = firestore.collection('students').doc(studentObj.id); 
     var name = student.name === studentObj.name ? student.name : studentObj.name;
-    var subject = student.subject === studentObj.subject ? student.name : studentObj.name;
+    var subject = student.subject === studentObj.subject ? student.name : studentObj.subject;
     var grade = student.name === studentObj.grade ? student.grade : studentObj.grade;
     return student.update({
         name: name,
@@ -130,15 +147,17 @@ function handleGetDataClick(){
 }
 function handleAddClicked(){
       addStudent();
+      
       $('.noData').remove();
 }
 function handleCancelClick(){
       clearAddStudentFormInputs();
+      $('label, input').removeClass('active valid');
 }
 function clearAddStudentFormInputs(){
-    $('#studentName').val('');
-    $('#subject').val('');
-    $('#studentGrade').val('');
+    $('#studentName, #studentNameUpdate').val('');
+    $('#subject, #subjectUpdate').val('');
+    $('#studentGrade, #studentGradeUpdate').val('');
 }
 
 //----------------------------------------->

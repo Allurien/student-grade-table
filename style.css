@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+.btn-small { 
+    padding: 0 8px;
+}
+td {
+    width: 20%;
+}
+.card-panel {
+    margin: 0;
+    margin-top: 2%;
+}
+h2 {
+    margin: 1.373333rem 0 1.424rem 0;
+    margin-top: 0;
+}
+h4 {
+    margin: 1rem 0 .912rem 0;
+}
+h5 {
+    margin: 0.093333rem 0 .656rem 0;
+}
+.modal {
+    overflow-y: inherit;
+}
+.studentTable {
+    margin-top: 5%;
+}
+.avgGrade {
+    padding: 5px;
+}
+/* Form Color Changes */
+/* label color */
+  .input-field label.active {
+    color: #2196f3;
+  }
+  input[type=text]:not(.browser-default):focus:not([readonly])+label {
+    color: #2196f3;
+  }
+  input[type=text]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid#2196f3;
+    box-shadow: 0 1px 0 0 #2196f3;
+  }
+  /* label underline focus color */
+  .input-field input[type=text]:focus {
+    border-bottom: 1px solid #2196f3;
+    box-shadow: 0 1px 0 0 #2196f3;
+  }
+  /* valid color */
+  .input-field input[type=text].valid {
+    border-bottom: 1px solid #00e676;
+    box-shadow: 0 1px 0 0 #00e676;
+  }
+  /* invalid color */
+  .input-field input[type=text].invalid {
+    border-bottom: 1px solid #c62828;
+    box-shadow: 0 1px 0 0 #c62828;
+  }
+  /* icon prefix focus color */
+  .input-field .prefix.active {
+    color: #2196f3;
+  }
+
