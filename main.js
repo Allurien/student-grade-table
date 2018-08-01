@@ -14,44 +14,41 @@ function initializeApp(){
 //----------------------------------------->
 // Student Object Handling
 var student_array = [];
-function Student(name, course, grade, id) {
+function Student(name, subject, grade, id) {
       this.name = name;
-      this.course = course;
+      this.subject = subject;
       this.grade = grade;
       this.id = id;Object 
 };
 function addStudent(){
     var name = $('#studentName').val();
-    var course = $('#course').val();
+    var subject = $('#subject').val();
     var grade = parseInt($('#studentGrade').val());
     var student_id = null;
-    var addedStudent = new Student(name, course, grade, student_id);
+    var addedStudent = new Student(name, subject, grade, student_id);
     firestore.collection('students').add({
           name: name,
-          subject: course,
+          subject: subject,
           grade: grade
     }).then(function(docRef) {
-          console.log("Document written with ID: ", docRef.id);
+          console.log("Student added with ID: ", docRef.id);
           student_id = docRef.id;
-          console.log(student_id);
           addedStudent.id = docRef.id;
-          console.log(addedStudent.id);
-          console.log(addedStudent);
           student_array.push(addedStudent);
           renderStudentOnDom(addedStudent);
           clearAddStudentFormInputs();
           updateStudentList(student_array);
       }).catch(function(error) {
-          console.error("Error adding document: ", error);
+          console.error("Error adding student: ", error);
       });
 }
 function addExternalDataStudent(students){
     for(studentIndex = 0; studentIndex < students.length; studentIndex++ ){
           var name = students[studentIndex].name;
-          var course = students[studentIndex].course;
+          var subject = students[studentIndex].subject;
           var grade = students[studentIndex].grade;
           var student_id = students[studentIndex].id;
-          var addedStudent = new Student(name, course, grade, student_id);
+          var addedStudent = new Student(name, subject, grade, student_id);
           student_array.push(addedStudent);
           renderStudentOnDom(addedStudent);
           updateStudentList(student_array);
@@ -59,7 +56,7 @@ function addExternalDataStudent(students){
 }
 function renderStudentOnDom(studentObj){
     $('#mainTable').append(`<tr></tr>`);
-    $('#mainTable tr:last-child').append(`<td>${studentObj.name}</td><td>${studentObj.course}</td><td>${studentObj.grade}</td>`);
+    $('#mainTable tr:last-child').append(`<td>${studentObj.name}</td><td>${studentObj.subject}</td><td>${studentObj.grade}</td>`);
     var updateData = $('<td>');
     var updateButton = $('<button>').addClass('btn btn-primary update').text('Update');
     updateButton.on('click', function(){
@@ -67,7 +64,7 @@ function renderStudentOnDom(studentObj){
           student_array.splice(arrayPosition, 1);
           $(this).parents('tr').remove();
           calculateGradeAverage(student_array);
-          deleteStudentData(studentObj);
+          updateStudentData(studentObj.id, studentObj);
     });
     updateData.append(updateButton);
     var deleteData = $('<td>');
@@ -77,7 +74,6 @@ function renderStudentOnDom(studentObj){
           student_array.splice(arrayPosition, 1);
           $(this).parents('tr').remove();
           calculateGradeAverage(student_array);
-          console.log(studentObj);
           deleteStudentData(studentObj.id);
     });
     deleteData.append(deleteButton);
@@ -86,10 +82,26 @@ function renderStudentOnDom(studentObj){
 }
 function deleteStudentData(student){
     firestore.collection('students').doc(student).delete().then(function() {
-          console.log("Document successfully deleted!");
+          console.log("Student successfully deleted!");
       }).catch(function(error) {
-          console.error("Error removing document: ", error);
+          console.error("Error removing student: ", error);
       });
+}
+function updateStudentData(studentID, studentObj){
+    var student = firestore.collection('students').doc(studentID); 
+    var name = student.name === studentObj.name ? student.name : studentObj.name;
+    var subject = student.subject === studentObj.subject ? student.name : studentObj.name;
+    var grade = student.name === studentObj.grade ? student.grade : studentObj.grade;
+    return student.update({
+        name: name,
+        subject: subject,
+        grade: grade
+    }
+    ).then(function() {
+        console.log("Student successfully updated!");
+    }).catch(function(error) {
+        console.error("Error updating student: ", error);
+    });
 }
 
 //----------------------------------------->
@@ -104,16 +116,13 @@ function handleGetDataClick(){
       $('tr').replaceWith();
       firestore.collection("students").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                console.log(doc.id, "=>", doc.data());
                 var fbStudent = {
                       'id': doc.id,
                       'name': doc.data().name,
                       'grade': doc.data().grade,
-                      'course': doc.data().subject
+                      'subject': doc.data().subject
                 }
-                console.log(fbStudent);
                 importedStudents.push(fbStudent);
-                console.log(importedStudents); 
             });
             addExternalDataStudent(importedStudents)
         });
@@ -128,7 +137,7 @@ function handleCancelClick(){
 }
 function clearAddStudentFormInputs(){
     $('#studentName').val('');
-    $('#course').val('');
+    $('#subject').val('');
     $('#studentGrade').val('');
 }
 
