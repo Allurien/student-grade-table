@@ -4,8 +4,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
         <link rel="icon" href="favicon-sgt.ico" type="image/x-icon" >
+        <link rel="stylesheet" href="style.css">
         <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>
         <script>
@@ -21,66 +23,81 @@
             firebase.initializeApp(config);
         </script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
         <script src="main.js"></script>
         <title>Student Grade Table</title>
     </head>
     <body>
         <div class="container">
-            <div class="">
-                <!-- only show this element when the isnt on mobile -->
-                <h1 class= "visible-md visible-lg visible-xl">Student Grade Table
-                    <small class= "pull-right">Grade Average : <span class="avgGrade label label-default">0</span></small>
-                </h1>
-                <!-- only show this element when the user gets to a mobile version -->
-                <h3 class= "visible-xs visible-sm">Student Grade Table
-                    <small>Grade Average : <span class="avgGrade label label-default">0</span></small>
-                </h3>
+            <div class="card-panel row col s12 blue-grey lighten-4">
+                <h2 class= "center">Student Grade Table</h2>
+                <h5 class= "center gradeAverage"><b>Grade Average: <span class="avgGrade card-panel blue-grey lighten-2">0</span></b></h5>
             </div>
-            <div class="student-add-form col-md-3 col-md-push-9">
-                <h4>Add Student</h4>
-                <div class="input-group form-group">
-                    <span class="input-group-addon">
-                        <span class=" glyphicon glyphicon-user"></span>
-                    </span>
-                    <input type="text" class="form-control " name="studentName" id="studentName" placeholder="Student Name">
+            <div class="center row studentTable">
+                <div class="col s12 m8 student-list-container">
+                    <h4 class=''>Student List</h4>
+                    <table class="table student-list highlight centered">
+                        <thead >
+                            <tr >
+                                <th>Student Name</th>
+                                <th>Student Course</th>
+                                <th>Student Grade</th>
+                                <th>Operations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mainTable">
+                        </tbody>
+                    </table>
                 </div>
-                <div class="input-group form-group">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-list-alt"></span>
-                    </span>
-                    <input type="text" class="form-control" name="subject" id="subject"
-                        placeholder="Student Course">
-                </div>
-                <div class="input-group form-group">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-education"></span>
-                    </span>
-                    <input type="text" class="form-control " name="studentGrade" id="studentGrade" placeholder="Student Grade">
-                </div>  
-                <div class="button-group">
-                    <p>
-                        <button type="button" class="btn btn-success addStudent" onclick="">Add</button>
-                        <button type="button" class="btn btn-default cancel" onclick="">Cancel</button>
-                    </p>
-                    <p>
-                        <button type="button" class="btn btn-success getData" onclick="">Get data From Server</button>
-                    </p>
+                <div class="col s12 m4 card-panel grey lighten-5">
+                    <h4 class=''>Add Student</h4>
+                    <div class="input-field">
+                        <i class="small material-icons prefix">person</i>
+                        <input type="text" class="validate" name="studentName" id="studentName" >
+                        <label for="studentName">Student Name</label>
+                    </div>
+                    <div class="input-field">
+                        <i class="small material-icons prefix">list</i>
+                        <input type="text" class="validate" name="subject" id="subject" >
+                        <label for="subject">Student Subject</label>
+                    </div>
+                    <div class="input-field">
+                        <i class="small material-icons prefix">grade</i>
+                        <input type="text" class="validate" name="studentGrade" id="studentGrade" >
+                        <label for="studentGrade">Student Grade</label>
+                    </div>  
+                    <div class="button-group center">
+                        <p>
+                            <button type="button" class="btn btn-small addStudent teal darken-1">Add Student</button>
+                            <button type="button" class="btn btn-small cancel grey darken-1">Clear</button>
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div class="student-list-container col-md-9 col-md-pull-3">
-                <table class="table student-list ">
-                    <thead >
-                        <tr >
-                            <th>Student Name</th>
-                            <th>Student Course</th>
-                            <th>Student Grade</th>
-                            <th>Operations</th>
-                        </tr>
-                    </thead>
-                    <tbody id="mainTable">
-                    </tbody>
-                </table>
+            <!-- Update Modal -->
+            <div id="updateModal" class="modal">
+                <div class="modal-content">
+                        <h4 class=''>Update Student</h4>
+                        <div class="input-field">
+                            <i class="small material-icons prefix">person</i>
+                            <input type="text" class="validate" name="studentNameUpdate" id="studentNameUpdate" >
+                            <label for="studentNameUpdate">Student Name</label>
+                        </div>
+                        <div class="input-field">
+                            <i class="small material-icons prefix">list</i>
+                            <input type="text" class="validate" name="subjectUpdate" id="subjectUpdate" >
+                            <label for="subjectUpdate">Student Subject</label>
+                        </div>
+                        <div class="input-field">
+                            <i class="small material-icons prefix">grade</i>
+                            <input type="text" class="validate" name="studentGradeUpdate" id="studentGradeUpdate" >
+                            <label for="studentGradeUpdate">Student Grade</label>
+                        </div>  
+                        <div class="button-group center">
+                                <button type="button" class="btn btn-small updateStudent teal darken-1" onclick="updateButton()">Update Student</button>
+                                <button type="button" class="btn btn-small modal-close cancel grey darken-1" onclick="handleCancelClick()">Close</button>  
+                        </div>
+                </div>
             </div>
         </div>
     </body>
