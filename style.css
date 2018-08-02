@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 body {
     font-family: 'Montserrat', sans-serif;
+    width: 100%;
 }
 .btn-small { 
     padding: 0 8px;
@@ -25,8 +26,11 @@ h5 {
 .modal {
     overflow-y: inherit;
 }
-.studentTable {
+.studentListing {
     margin-top: 5%;
+}
+.studentTable {
+    margin-bottom: 5%;
 }
 .avgGrade {
     padding: 5px;

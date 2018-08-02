@@ -15,32 +15,35 @@ function initializeApp(){
 //----------------------------------------->
 // Student Object Handling
 var student_array = [];
-function Student(name, subject, grade, id) {
+function Student(name, subject, grade, id, timestamp) {
       this.name = name;
       this.subject = subject;
       this.grade = grade;
-      this.id = id;Object 
+      this.id = id;
+      this.timestamp = timestamp;
 };
 function addStudent(){
     var name = $('#studentName').val();
     var subject = $('#subject').val();
     var grade = parseInt($('#studentGrade').val());
     var student_id = null;
-    var addedStudent = new Student(name, subject, grade, student_id);
+    var timestamp = null;
+    var addedStudent = new Student(name, subject, grade, student_id, timestamp);
     firestore.collection('students').add({
           name: name,
           subject: subject,
-          grade: grade
+          grade: grade, 
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function(docRef) {
-          console.log("Student added with ID: ", docRef.id);
           student_id = docRef.id;
           addedStudent.id = docRef.id;
           student_array.push(addedStudent);
           renderStudentOnDom(addedStudent);
           clearAddStudentFormInputs();
           updateStudentList(student_array);
+          M.toast({html: `Student ${name} added`, classes: 'teal darken-1'});
       }).catch(function(error) {
-          console.error("Error adding student: ", error);
+          M.toast({html: `"Error adding student: ", ${error}`, classes: 'red darken-1'});
       });
       $('label, input').removeClass('active valid');
 }
@@ -66,6 +69,7 @@ function renderStudentOnDom(studentObj){
         $('#studentNameUpdate').val(studentObj.name).addClass('active');
         $('#subjectUpdate').val(studentObj.subject).addClass('active');
         $('#studentGradeUpdate').val(studentObj.grade).addClass('active');
+        $('.modal-content label').addClass('active');
     });
     updateData.append(updateButton);
     var deleteData = $('<td>');
@@ -76,6 +80,7 @@ function renderStudentOnDom(studentObj){
           $(this).parents('tr').remove();
           calculateGradeAverage(student_array);
           deleteStudentData(studentObj.id);
+          handleGetDataClick();
     });
     deleteData.append(deleteButton);
     $('#mainTable tr:last-child').append(updateData);
@@ -83,12 +88,16 @@ function renderStudentOnDom(studentObj){
 }
 function deleteStudentData(student){
     firestore.collection('students').doc(student).delete().then(function() {
-          console.log("Student successfully deleted!");
+            M.toast({html: `Student deleted`, classes: 'red darken-1'});
+            if(student_array.length === 0){
+                renderGradeAverage(0);
+                $('#mainTable').append(`<tr class="noData"><td><h5>User Info Unavailable</h5></td></tr>`);
+            }
       }).catch(function(error) {
-          console.error("Error removing student: ", error);
+            M.toast({html: `"Error removing student: ", ${error}`, classes: 'red darken-1'});
       });
 }
-function updateButton(){
+function updateButtonSubmit(){
     var name = $('#studentNameUpdate').val();
     var subject = $('#subjectUpdate').val();
     var grade = parseInt($('#studentGradeUpdate').val());
@@ -96,28 +105,31 @@ function updateButton(){
     var updatedStudent = {
         name: name,
         subject: subject,
-        grade: grade,
+        grade: grade,   
         id: id
     }
     updateStudentData(updatedStudent);
     handleGetDataClick();
     $('#updateModal').modal('close');
     updateStudentList(student_array);
+    
 }
 function updateStudentData(studentObj){
-    var student = firestore.collection('students').doc(studentObj.id); 
-    var name = student.name === studentObj.name ? student.name : studentObj.name;
-    var subject = student.subject === studentObj.subject ? student.name : studentObj.subject;
-    var grade = student.name === studentObj.grade ? student.grade : studentObj.grade;
+    var student = firestore.collection('students').doc(`${studentObj.id}`); 
+    var name = studentObj.name;
+    var subject = studentObj.subject;
+    var grade = studentObj.grade;
+    var id = studentObj.id;
     return student.update({
         name: name,
         subject: subject,
-        grade: grade
+        grade: grade,
+        id: id
     }
     ).then(function() {
-        console.log("Student successfully updated!");
+        M.toast({html: `Student ${name} updated`, classes: 'blue lighten-1'});
     }).catch(function(error) {
-        console.error("Error updating student: ", error);
+        M.toast({html: `"Error updating student: ", ${error}`, classes: 'red darken-1'})
     });
 }
 
@@ -130,24 +142,31 @@ function addClickHandlersToElements(){
 }
 function handleGetDataClick(){
       var importedStudents = [];
-      $('tr').replaceWith();
-      firestore.collection("students").get().then((querySnapshot) => {
+      $('tbody tr').replaceWith();
+      var students = firestore.collection("students")
+      students.orderBy("name").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 var fbStudent = {
                       'id': doc.id,
                       'name': doc.data().name,
                       'grade': doc.data().grade,
-                      'subject': doc.data().subject
+                      'subject': doc.data().subject,
+                      'timestamp': doc.data().timestamp
                 }
                 importedStudents.push(fbStudent);
             });
             addExternalDataStudent(importedStudents)
         });
-      $('.noData').remove();
+        if(student_array.length === 0){
+            renderGradeAverage(0);
+            $('#mainTable').append(`<tr class="noData"><td><h5>User Info Unavailable</h5></td></tr>`);
+      } else {
+        $('.noData').remove();
+      }
+      
 }
 function handleAddClicked(){
-      addStudent();
-      
+      addStudent();    
       $('.noData').remove();
 }
 function handleCancelClick(){
@@ -170,8 +189,9 @@ function calculateGradeAverage(students){
       if(student_array.length === 0){
             renderGradeAverage(0);
             $('#mainTable').append(`<tr class="noData"><td><h1>User Info Unavailable</h1></td></tr>`);
-      }
-      for(var studentAverage=0; studentAverage < students.length; studentAverage++){
+      } else {
+        $('.noData').remove();
+        for(var studentAverage=0; studentAverage < students.length; studentAverage++){
             grade += parseInt(students[studentAverage].grade);
             if(student_array.length >= 2) {
                   var average = Math.round(grade/students.length);
@@ -179,6 +199,8 @@ function calculateGradeAverage(students){
                   var average = (grade/students.length);
             }
       }
+      }
+      
       renderGradeAverage(average);
       return average;
 
