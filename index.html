@@ -29,20 +29,21 @@
     </head>
     <body>
         <div class="container">
-            <div class="card-panel row col s12 blue-grey lighten-4">
+            <div class="card-panel row col s12 blue-grey lighten-4 center">
                 <h2 class= "center">Student Grade Table</h2>
                 <h5 class= "center gradeAverage"><b>Grade Average: <span class="avgGrade card-panel blue-grey lighten-2">0</span></b></h5>
             </div>
-            <div class="center row studentTable">
-                <div class="col s12 m8 student-list-container">
+            <div class="center row studentListing">
+                <div class="col s12 m8">
                     <h4 class=''>Student List</h4>
-                    <table class="table student-list highlight centered">
+                    <table class="responsive-table highlight centered studentTable">
                         <thead >
-                            <tr >
-                                <th>Student Name</th>
-                                <th>Student Course</th>
-                                <th>Student Grade</th>
-                                <th>Operations</th>
+                            <tr>
+                                <th class="center">Student Name</th>
+                                <th class="center">Student Course</th>
+                                <th class="center">Student Grade</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="mainTable">
@@ -94,7 +95,7 @@
                             <label for="studentGradeUpdate">Student Grade</label>
                         </div>  
                         <div class="button-group center">
-                                <button type="button" class="btn btn-small updateStudent teal darken-1" onclick="updateButton()">Update Student</button>
+                                <button type="button" class="btn btn-small updateStudent teal darken-1" onclick="updateButtonSubmit()">Update Student</button>
                                 <button type="button" class="btn btn-small modal-close cancel grey darken-1" onclick="handleCancelClick()">Close</button>  
                         </div>
                 </div>
