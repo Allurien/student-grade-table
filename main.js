@@ -51,7 +51,6 @@ function addStudent(){
       }).catch(function(error) {
           M.toast({html: `"Error adding student: ", ${error}`, classes: 'red darken-1'});
       });
-      
 }
 function addExternalDataStudent(students){
       student_array=[];
@@ -107,19 +106,23 @@ function deleteStudentData(student){
       });
 }
 function updateButtonSubmit(){
-    var name = $('#studentNameUpdate').val();
-    var subject = $('#subjectUpdate').val();
-    var grade = parseInt($('#studentGradeUpdate').val());
-    var id = $('.updateStudent').attr('studentID');
-    console.log('id', id);
-    var updatedStudent = {
-        name: name,
-        subject: subject,
-        grade: grade,
-        id: id
-    }
-    updateStudentData(updatedStudent);
-    $('#updateModal').modal('close');
+      var name = $('#studentNameUpdate').val();
+      var subject = $('#subjectUpdate').val();
+      var grade = parseInt($('#studentGradeUpdate').val());
+      var id = $('.updateStudent').attr('studentID');
+      console.log('grade', grade);
+      if (name === "" || subject === "" ||  isNaN(grade)) {
+            M.toast({html: `Form must be filled out`, classes: 'red darken-1'});
+            return false;
+      }
+      var updatedStudent = {
+            name: name,
+            subject: subject,
+            grade: grade,
+            id: id
+      }
+      updateStudentData(updatedStudent);
+      $('#updateModal').modal('close');
 }
 function updateStudentData(studentObj){
     var student = firestore.collection('students').doc(`${studentObj.id}`);
@@ -256,6 +259,20 @@ function handleFormInputs(){
       var name = $('#studentName').val();
       var subject = $('#subject').val();
       var grade = $('#studentGrade').val();
+      validateForm();
+      function validateForm() {
+            if (name === "" || subject === "" || grade === "") {
+                  M.toast({html: `Form must be filled out`, classes: 'red darken-1'});
+                  return false;
+            } else {
+                  handleAddClicked();
+            }
+      }
+}
+function handleUpdateInputs(){
+      var name = $('#studentNameUpdate').val();
+      var subject = $('#subjectUpdate').val();
+      var grade = $('#studentGradeUpdate').val();
       validateForm();
       function validateForm() {
             if (name === "" || subject === "" || grade === "") {
