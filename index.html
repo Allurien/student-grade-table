@@ -39,9 +39,9 @@
                     <table class="responsive-table highlight centered studentTable">
                         <thead >
                             <tr>
-                                <th class="center">Student Name</th>
-                                <th class="center">Student Course</th>
-                                <th class="center">Student Grade</th>
+                                <th class="center" onclick="sortStudents('name')">Name</th>
+                                <th class="center" onclick="sortStudents('subject')">Subject</th>
+                                <th class="center" onclick="sortStudents('grade')">Grade</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -52,27 +52,30 @@
                 </div>
                 <div class="col s12 m4 card-panel grey lighten-5">
                     <h4 class=''>Add Student</h4>
-                    <div class="input-field">
-                        <i class="small material-icons prefix">person</i>
-                        <input type="text" class="validate" name="studentName" id="studentName" >
-                        <label for="studentName">Student Name</label>
-                    </div>
-                    <div class="input-field">
-                        <i class="small material-icons prefix">list</i>
-                        <input type="text" class="validate" name="subject" id="subject" >
-                        <label for="subject">Student Subject</label>
-                    </div>
-                    <div class="input-field">
-                        <i class="small material-icons prefix">grade</i>
-                        <input type="text" class="validate" name="studentGrade" id="studentGrade" >
-                        <label for="studentGrade">Student Grade</label>
-                    </div>  
-                    <div class="button-group center">
-                        <p>
-                            <button type="button" class="btn btn-small addStudent teal darken-1">Add Student</button>
-                            <button type="button" class="btn btn-small cancel grey darken-1">Clear</button>
-                        </p>
-                    </div>
+                        <div class="input-field">
+                            <i class="small material-icons prefix">person</i>
+                            <input type="text" class="validate addNameField" name="studentName" id="studentName" required>
+                            <span class="helper-text" data-error="Please enter a name">Grade</span>
+                            <label for="studentName">Name</label>
+                        </div>
+                        <div class="input-field">
+                            <i class="small material-icons prefix">list</i>
+                            <input type="text" class="validate addSubjectField" name="subject" id="subject" required>
+                            <span class="helper-text" data-error="Please enter a subject">Grade</span>
+                            <label for="subject">Subject</label>
+                        </div>
+                        <div class="input-field">
+                            <i class="small material-icons prefix">grade</i>
+                            <input type="number" pattern="[0-9]{2}" maxlength="2" min="0" max="100" class="validate addGradeField" name="studentGrade" id="studentGrade" required>
+                            <span class="helper-text" data-error="Please enter a grade">Grade</span>
+                            <label for="studentGrade">Grade</label>
+                        </div>
+                        <div class="button-group center">
+                            <p>
+                                <button type="button" class="btn btn-small addStudent teal darken-1">Add Student</button>
+                                <button type="button" class="btn btn-small cancel grey darken-1">Clear</button>
+                            </p>
+                        </div>
                 </div>
             </div>
             <!-- Update Modal -->
@@ -81,18 +84,21 @@
                         <h4 class=''>Update Student</h4>
                         <div class="input-field">
                             <i class="small material-icons prefix">person</i>
-                            <input type="text" class="validate" name="studentNameUpdate" id="studentNameUpdate" >
-                            <label for="studentNameUpdate">Student Name</label>
+                            <input type="text" class="validate" name="studentNameUpdate" id="studentNameUpdate" required>
+                            <span class="helper-text" data-error="Please enter a name">Grade</span>
+                            <label for="studentNameUpdate">Name</label>
                         </div>
                         <div class="input-field">
                             <i class="small material-icons prefix">list</i>
-                            <input type="text" class="validate" name="subjectUpdate" id="subjectUpdate" >
-                            <label for="subjectUpdate">Student Subject</label>
+                            <input type="text" class="validate" name="subjectUpdate" id="subjectUpdate" required>
+                            <span class="helper-text" data-error="Please enter a subject">Grade</span>
+                            <label for="subjectUpdate">Subject</label>
                         </div>
                         <div class="input-field">
                             <i class="small material-icons prefix">grade</i>
-                            <input type="text" class="validate" name="studentGradeUpdate" id="studentGradeUpdate" >
-                            <label for="studentGradeUpdate">Student Grade</label>
+                            <input type="number" pattern="[0-9]{2}" maxlength="2" min="0" max="100" class="validate" name="studentGradeUpdate" id="studentGradeUpdate" required>
+                            <span class="helper-text" data-error="Please enter a grade">Grade</span>
+                            <label for="studentGradeUpdate">Grade</label>
                         </div>  
                         <div class="button-group center">
                                 <button type="button" class="btn btn-small updateStudent teal darken-1" onclick="updateButtonSubmit()">Update Student</button>
