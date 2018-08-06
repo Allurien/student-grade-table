@@ -83,7 +83,7 @@ function renderStudentOnDom(studentObj){
     $('#mainTable').append(`<tr></tr>`);
     $('#mainTable tr:last-child').append(`<td>${studentObj.name}</td><td>${studentObj.subject}</td><td>${studentObj.grade}</td>`);
     var updateData = $('<td>');
-    var updateButton = $('<button>').addClass('btn btn-small update blue lighten-1').text('Update').attr('studentID', studentObj.id);
+    var updateButton = $('<button><i class="small material-icons prefix">edit</i></button>').addClass('btn btn-small update blue lighten-1').attr('studentID', studentObj.id);
     updateButton.on('click', function(){
         $('#updateModal').modal('open');  
         $('#studentNameUpdate').val(studentObj.name).addClass('active');
@@ -94,7 +94,7 @@ function renderStudentOnDom(studentObj){
     });
     updateData.append(updateButton);
     var deleteData = $('<td>');
-    var deleteButton = $('<button>').addClass('btn btn-small delete red darken-1').text('Delete');
+    var deleteButton = $('<button><i class="small material-icons prefix">delete</i></button>').addClass('btn btn-small delete red darken-1');
     deleteButton.on('click', function(){
       $('.deleteStudent').attr('studentID', studentObj.id);
       handleDeleteModal(studentObj)});
