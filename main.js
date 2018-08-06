@@ -3,6 +3,7 @@ const firestore = firebase.firestore();
 const settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
 
+
 function initializeApp(){
     addClickHandlersToElements();
     if (student_array = []) {
@@ -10,6 +11,8 @@ function initializeApp(){
     }
     handleGetDataClick();
     $('#updateModal').modal();
+    $('#deleteModal').modal();
+    
 }
 
 //----------------------------------------->
@@ -83,20 +86,30 @@ function renderStudentOnDom(studentObj){
     var deleteData = $('<td>');
     var deleteButton = $('<button>').addClass('btn btn-small delete red darken-1').text('Delete');
     deleteButton.on('click', function(){
-          var arrayPosition = student_array.indexOf(studentObj);
-          student_array.splice(arrayPosition, 1);
-          $(this).parents('tr').remove();
-          calculateGradeAverage(student_array);
-          deleteStudentData(studentObj.id);
-          handleGetDataClick();
-    });
+      $('.deleteStudent').attr('studentID', studentObj.id);
+      handleDeleteModal(studentObj)});
     deleteData.append(deleteButton);
     $('#mainTable tr:last-child').append(updateData);
     $('#mainTable tr:last-child').append(deleteData);
 }
+function handleDeleteModal(student){
+      $('#deleteModal').modal('open');
+      console.log(student);
+      $('.deleteConfirm').on('click', function(){
+            deleteStudentData(student)
+      });
+}
 function deleteStudentData(student){
-    firestore.collection('students').doc(student).delete().then(function() {
+      //TODO: Resolve triggering sequence
+      console.log(student);
+      $('#deleteModal').modal('close');
+      firestore.collection('students').doc(student.id).delete().then(function() {
             M.toast({html: `Student deleted`, classes: 'red darken-1'});
+            var arrayPosition = student_array.indexOf(student);
+            student_array.splice(arrayPosition, 1);
+            $(this).parents('tr').remove();
+            calculateGradeAverage(student_array);
+            handleGetDataClick();
             if(student_array.length === 0){
                 renderGradeAverage(0);
                 $('#mainTable').append(`<tr class="noData"><td><h5>User Info Unavailable</h5></td></tr>`);
