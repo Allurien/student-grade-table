@@ -1,18 +1,28 @@
 $(document).ready(initializeApp);
-const firestore = firebase.firestore();
-const settings = {timestampsInSnapshots: true};
-firestore.settings(settings);
+
 
 
 function initializeApp(){
-    addClickHandlersToElements();
-    if (student_array = []) {
-          $('#mainTable').append(`<tr class="noData"><td><h1>User Info Unavailable</h1></td></tr>`);
-    }
-    handleGetDataClick();
-    $('#updateModal').modal();
-    $('#deleteModal').modal();
-    
+      addClickHandlersToElements();
+      if (student_array = []) {
+            $('#mainTable').append(`<tr class="noData"><td><h1>User Info Unavailable</h1></td></tr>`);
+      }
+      handleGetDataClick();
+      $('#updateModal').modal();
+      $('#deleteModal').modal();
+      if(!navigator.onLine){
+            $('.offline').removeClass('displayNone');
+      }
+      window.addEventListener("offline", function () {
+            $('.offline').removeClass('displayNone');
+            console.log("Online status: " + navigator.onLine);
+        }, false);
+        
+        window.addEventListener("online", function () {
+            $('.offline').addClass('displayNone');
+            console.log("Online status: " + navigator.onLine);
+        }, false);
+      
 }
 
 //----------------------------------------->
@@ -31,31 +41,31 @@ function Student(name, subject, grade, id, timestamp) {
       this.timestamp = timestamp;
 };
 function addStudent(){
-    var name = $('#studentName').val();
-    var subject = $('#subject').val();
-    var grade = parseInt($('#studentGrade').val());
-    var student_id = null;
-    var timestamp = null;
-    var addedStudent = new Student(name, subject, grade, student_id, timestamp);
-    firestore.collection('students').add({
-          name: name,
-          subject: subject,
-          grade: grade, 
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function(docRef) {
-          student_id = docRef.id;
-          addedStudent.id = docRef.id;
-          student_array.push(addedStudent);
-          renderStudentOnDom(addedStudent);
-          $('label, input').removeClass('active valid');
-          clearAddStudentFormInputs();
-          calculateGradeAverage(student_array);
-          M.toast({html: `Student ${name} added`, classes: 'teal darken-1'});
+      var name = $('#studentName').val();
+      var subject = $('#subject').val();
+      var grade = parseInt($('#studentGrade').val());
+      var student_id = null;
+      var timestamp = null;
+      var addedStudent = new Student(name, subject, grade, student_id, timestamp);
+      clearAddStudentFormInputs();
+      firestore.collection('students').add({
+            name: name,
+            subject: subject,
+            grade: grade,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function(docRef) {
+            student_id = docRef.id;
+            addedStudent.id = docRef.id;
+            student_array.push(addedStudent);
+            renderStudentOnDom(addedStudent);
+            calculateGradeAverage(student_array);
+            M.toast({html: `Student ${name} added`, classes: 'teal darken-1'});
       }).catch(function(error) {
-          M.toast({html: `"Error adding student: ", ${error}`, classes: 'red darken-1'});
+            M.toast({html: `"Error adding student: ", ${error}`, classes: 'red darken-1'});
       });
 }
 function addExternalDataStudent(students){
+      $('tbody tr').replaceWith();
       student_array=[];
     for(studentIndex = 0; studentIndex < students.length; studentIndex++ ){
           var name = students[studentIndex].name;
@@ -94,14 +104,12 @@ function renderStudentOnDom(studentObj){
 }
 function handleDeleteModal(student){
       $('#deleteModal').modal('open');
-      console.log(student);
       $('.deleteConfirm').on('click', function(){
             deleteStudentData(student)
       });
 }
 function deleteStudentData(student){
       //TODO: Resolve triggering sequence
-      console.log(student);
       $('#deleteModal').modal('close');
       firestore.collection('students').doc(student.id).delete().then(function() {
             M.toast({html: `Student deleted`, classes: 'red darken-1'});
@@ -123,7 +131,6 @@ function updateButtonSubmit(){
       var subject = $('#subjectUpdate').val();
       var grade = parseInt($('#studentGradeUpdate').val());
       var id = $('.updateStudent').attr('studentID');
-      console.log('grade', grade);
       if (name === "" || subject === "" ||  isNaN(grade)) {
             M.toast({html: `Form must be filled out`, classes: 'red darken-1'});
             return false;
@@ -143,7 +150,6 @@ function updateStudentData(studentObj){
     var subject = studentObj.subject;
     var grade = studentObj.grade;
     var id = studentObj.id;
-    console.log('id', id);
     return student.update({
         name: name,
         subject: subject,
@@ -237,19 +243,20 @@ function handleGetDataClick(){
       var importedStudents = [];
       $('tbody tr').replaceWith();
       var students = firestore.collection("students")
-      students.orderBy("name").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                  var fbStudent = {
-                        'id': doc.id,
-                        'name': doc.data().name,
-                        'grade': doc.data().grade,
-                        'subject': doc.data().subject,
-                        'timestamp': doc.data().timestamp
-                  }
-                  importedStudents.push(fbStudent);
-            });
-            addExternalDataStudent(importedStudents)
-      });
+      students.orderBy("name").onSnapshot(function(querySnapshot){
+                  querySnapshot.forEach(function(doc) {
+                        var fbStudent = {
+                              'id': doc.id,
+                              'name': doc.data().name,
+                              'grade': doc.data().grade,
+                              'subject': doc.data().subject,
+                              'timestamp': doc.data().timestamp
+                        }
+                        importedStudents.push(fbStudent);
+                  });
+                  addExternalDataStudent(importedStudents);
+                  importedStudents = [];
+              });
       if(student_array.length === 0){
             renderGradeAverage(0);
             $('#mainTable').append(`<tr class="noData"><td><h5>User Info Unavailable</h5></td></tr>`);
@@ -264,9 +271,10 @@ function handleCancelClick(){
       $('label, input').removeClass('active valid');
 }
 function clearAddStudentFormInputs(){
-    $('#studentName, #studentNameUpdate').val('');
-    $('#subject, #subjectUpdate').val('');
-    $('#studentGrade, #studentGradeUpdate').val('');
+    $('#studentName, #studentNameUpdate').val('').removeClass('valid');
+    $('#subject, #subjectUpdate').val('').removeClass('valid');
+    $('#studentGrade, #studentGradeUpdate').val('').removeClass('valid');
+    $('label').removeClass('active');
 }
 function handleFormInputs(){
       var name = $('#studentName').val();
