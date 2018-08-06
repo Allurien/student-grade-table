@@ -22,7 +22,13 @@
                 messagingSenderId: "608093328053"
             };
             firebase.initializeApp(config);
-            firebase.auth().signInAnonymously().catch(function(error) { 
+            var firestore = firebase.firestore();
+                var settings = {timestampsInSnapshots: true};
+                firestore.settings(settings);
+            firebase.firestore().enablePersistence().then(function(){
+                
+            });
+            firebase.auth().signInAnonymously().catch(function(error) {
             var errorCode = error.code;
             var errorMessage = error.message;
             M.toast({html: `"Error removing student: ", ${error.message}`, classes: 'red darken-1'});
@@ -40,6 +46,7 @@
         <title>Student Grade Table</title>
     </head>
     <body>
+        <div class="offline displayNone center amber lighten-2 z-depth-2 sticky">You are currently working offline</div>
         <div class="container">
             <div class="card-panel row col s12 blue-grey lighten-4 center">
                 <h2 class= "center">Student Grade Table</h2>

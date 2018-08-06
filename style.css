@@ -35,6 +35,13 @@ h5 {
 .avgGrade {
     padding: 5px;
 }
+.sticky{
+    position: sticky;
+    top: 0;
+}
+.displayNone{
+    display: none;
+}
 /* Form Color Changes */
 /* label color */
   .input-field label.active {
