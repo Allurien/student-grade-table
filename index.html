@@ -9,6 +9,7 @@
         <link rel="icon" href="favicon-sgt.ico" type="image/x-icon" >
         <link rel="stylesheet" href="style.css">
         <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>
         <script>
             // Initializing Firebase
@@ -21,6 +22,17 @@
                 messagingSenderId: "608093328053"
             };
             firebase.initializeApp(config);
+            firebase.auth().signInAnonymously().catch(function(error) { 
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            M.toast({html: `"Error removing student: ", ${error.message}`, classes: 'red darken-1'});
+            });
+            firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                var isAnonymous = user.isAnonymous;
+                var uid = user.uid;
+            }
+            });
         </script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
@@ -99,11 +111,18 @@
                             <input type="number" pattern="[0-9]{2}" maxlength="2" min="0" max="100" class="validate" name="studentGradeUpdate" id="studentGradeUpdate" required>
                             <span class="helper-text" data-error="Please enter a grade">Grade</span>
                             <label for="studentGradeUpdate">Grade</label>
-                        </div>  
+                        </div>
                         <div class="button-group center">
                                 <button type="button" class="btn btn-small updateStudent teal darken-1" onclick="updateButtonSubmit()">Update Student</button>
                                 <button type="button" class="btn btn-small modal-close cancel grey darken-1" onclick="handleCancelClick()">Close</button>  
                         </div>
+                </div>
+            </div>
+            <div id="deleteModal" class="modal">
+                <div class="modal-content">
+                    <p>Are you sure you want to delete this student?</p>
+                    <button type="button" class="btn btn-small deleteConfirm red darken-1" onclick="deleteStudentData()">Delete Student</button>
+                    <button type="button" class="btn btn-small modal-close cancel grey darken-1" onclick="handleCancelClick()">Close</button>  
                 </div>
             </div>
         </div>
