@@ -23,8 +23,13 @@ h4 {
 h5 {
     margin: 0.093333rem 0 .656rem 0;
 }
+td {
+    padding: 10px 0;
+    width: 15%;
+}
 .modal {
     overflow-y: inherit;
+    max-height: 80%;
 }
 .studentListing {
     margin-top: 5%;
@@ -41,6 +46,29 @@ h5 {
 }
 .displayNone{
     display: none;
+}
+.addCard{
+    margin-bottom: 0;
+}
+.addHeader{
+    margin-bottom:0;
+}
+.titleCard{
+    margin-bottom: 5%;
+}
+.addTitle{
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.addHeader button{
+    margin-bottom: 5%;
+}
+.input-field{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.updateModal{
+    overflow-y: auto;
 }
 /* Form Color Changes */
 /* label color */
@@ -74,3 +102,8 @@ h5 {
     color: #2196f3;
   }
 
+  @media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 500px){
+    
+}

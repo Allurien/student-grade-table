@@ -47,15 +47,46 @@
     </head>
     <body>
         <div class="offline displayNone center amber lighten-2 z-depth-2 sticky">You are currently working offline</div>
-        <div class="container">
-            <div class="card-panel row col s12 blue-grey lighten-4 center">
+        <div class="container col s12">
+            <div class="card-panel row titleCard col s12 blue-grey lighten-4 center">
                 <h2 class= "center">Student Grade Table</h2>
                 <h5 class= "center gradeAverage"><b>Grade Average: <span class="avgGrade card-panel blue-grey lighten-2">0</span></b></h5>
             </div>
-            <div class="center row studentListing">
-                <div class="col s12 m8">
+            
+            <div class="row col s12 card-panel grey lighten-5 addCard">
+                    <div class="row valign-wrapper addHeader">
+                            
+                    </div>
+                    <div class="row col s12 addCard center">
+                        <div class="input-field col s12 m4">
+                            <i class="small material-icons prefix">person</i>
+                            <input type="text" class="validate addNameField" name="studentName" id="studentName" required>
+                            <span class="helper-text" data-error="Please enter a name"></span>
+                            <label for="studentName">Name</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <i class="small material-icons prefix">list</i>
+                            <input type="text" class="validate addSubjectField" name="subject" id="subject" required>
+                            <span class="helper-text" data-error="Please enter a subject"></span>
+                            <label for="subject">Subject</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <i class="small material-icons prefix">grade</i>
+                            <input type="number" pattern="[0-9]{2}" maxlength="2" min="0" max="100" class="validate addGradeField" name="studentGrade" id="studentGrade" required>
+                            <span class="helper-text" data-error="Please enter a grade"></span>
+                            <label for="studentGrade">Grade</label>
+                        </div>
+                        <!-- <h4 class='center col s5 addTitle'>Add Student</h4> -->
+                        <div class="button-group center col s12">
+                                <button type="button" class="btn btn-small addStudent teal darken-1">Add Student</button>
+                                <button type="button" class="btn btn-small cancel grey darken-1">Clear</button>
+                    </div>
+                    </div>    
+                </div>
+            <div class="center col s12 row studentListing">
+                <div class="">
                     <h4 class=''>Student List</h4>
-                    <table class="responsive-table highlight centered studentTable">
+                    <table class="highlight centered col s12 studentTable">
                         <thead >
                             <tr>
                                 <th class="center" onclick="sortStudents('name')">Name</th>
@@ -69,54 +100,28 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col s12 m4 card-panel grey lighten-5">
-                    <h4 class=''>Add Student</h4>
-                        <div class="input-field">
-                            <i class="small material-icons prefix">person</i>
-                            <input type="text" class="validate addNameField" name="studentName" id="studentName" required>
-                            <span class="helper-text" data-error="Please enter a name">Grade</span>
-                            <label for="studentName">Name</label>
-                        </div>
-                        <div class="input-field">
-                            <i class="small material-icons prefix">list</i>
-                            <input type="text" class="validate addSubjectField" name="subject" id="subject" required>
-                            <span class="helper-text" data-error="Please enter a subject">Grade</span>
-                            <label for="subject">Subject</label>
-                        </div>
-                        <div class="input-field">
-                            <i class="small material-icons prefix">grade</i>
-                            <input type="number" pattern="[0-9]{2}" maxlength="2" min="0" max="100" class="validate addGradeField" name="studentGrade" id="studentGrade" required>
-                            <span class="helper-text" data-error="Please enter a grade">Grade</span>
-                            <label for="studentGrade">Grade</label>
-                        </div>
-                        <div class="button-group center">
-                            <p>
-                                <button type="button" class="btn btn-small addStudent teal darken-1">Add Student</button>
-                                <button type="button" class="btn btn-small cancel grey darken-1">Clear</button>
-                            </p>
-                        </div>
-                </div>
+                
             </div>
             <!-- Update Modal -->
-            <div id="updateModal" class="modal">
-                <div class="modal-content">
-                        <h4 class=''>Update Student</h4>
+            <div id="updateModal" class="modal updateModal">
+                <div class="modal-content ">
+                        <h4 class='center'>Update Student</h4>
                         <div class="input-field">
                             <i class="small material-icons prefix">person</i>
                             <input type="text" class="validate" name="studentNameUpdate" id="studentNameUpdate" required>
-                            <span class="helper-text" data-error="Please enter a name">Grade</span>
+                            <span class="helper-text" data-error="Please enter a name"></span>
                             <label for="studentNameUpdate">Name</label>
                         </div>
                         <div class="input-field">
                             <i class="small material-icons prefix">list</i>
                             <input type="text" class="validate" name="subjectUpdate" id="subjectUpdate" required>
-                            <span class="helper-text" data-error="Please enter a subject">Grade</span>
+                            <span class="helper-text" data-error="Please enter a subject"></span>
                             <label for="subjectUpdate">Subject</label>
                         </div>
                         <div class="input-field">
                             <i class="small material-icons prefix">grade</i>
                             <input type="number" pattern="[0-9]{2}" maxlength="2" min="0" max="100" class="validate" name="studentGradeUpdate" id="studentGradeUpdate" required>
-                            <span class="helper-text" data-error="Please enter a grade">Grade</span>
+                            <span class="helper-text" data-error="Please enter a grade"></span>
                             <label for="studentGradeUpdate">Grade</label>
                         </div>
                         <div class="button-group center">
