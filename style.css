@@ -70,6 +70,16 @@ td {
 .updateModal{
     overflow-y: auto;
 }
+.tableLabel {
+    cursor: pointer;
+    margin: auto;
+}
+.tableLabel:hover {
+    text-shadow: 1px 1px 3px black;
+}
+.sortIcon{
+    vertical-align: middle;
+}
 /* Form Color Changes */
 /* label color */
   .input-field label.active {
