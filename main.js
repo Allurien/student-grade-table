@@ -22,12 +22,18 @@ function initializeApp(){
                   console.log("Online status: " + navigator.onLine);
             }, false);
 }
-
+const titleCase = (str) => {
+      return str
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+      };
 //----------------------------------------->
 // Student Object Handling
 var student_array = [];
 var sortedSwitch = {
-      "name": 0,
+      "name": 1,
       "subject": 0,
       "grade": 0
 }
@@ -44,6 +50,8 @@ function addStudent(){
       var grade = parseInt($('#studentGrade').val());
       var student_id = null;
       var timestamp = null;
+      name = titleCase(name);
+      subject = titleCase(subject);
       var addedStudent = new Student(name, subject, grade, student_id, timestamp);
       clearAddStudentFormInputs();
       firestore.collection('students').add({
@@ -142,11 +150,14 @@ function updateButtonSubmit(){
       $('#updateModal').modal('close');
 }
 function updateStudentData(studentObj){
+      $('.preloader-wrapper').removeClass('displayNone');
       var student = firestore.collection('students').doc(`${studentObj.id}`);
       var name = studentObj.name;
       var subject = studentObj.subject;
       var grade = studentObj.grade;
       var id = studentObj.id;
+      name = titleCase(name);
+      subject = titleCase(subject);
       return student.update({
             name: name,
             subject: subject,
@@ -156,6 +167,7 @@ function updateStudentData(studentObj){
       ).then(function() {
       handleGetDataClick();
       M.toast({html: `Student ${name} updated`, classes: 'blue lighten-1'});
+      $('.preloader-wrapper').addClass('displayNone');
       }).catch(function(error) {
             M.toast({html: `"Error updating student: ", ${error}`, classes: 'red darken-1'})
       });
@@ -167,19 +179,21 @@ function addClickHandlersToElements(){
       $('.addStudent').click(handleFormInputs);
       $('.cancel').click(handleCancelClick);
       $('.getData').click(handleGetDataClick);
-      $("input").keypress(function(event) {
+      $(".updateForm").keypress(function(event) {
             if (event.which == 13) {
                   event.preventDefault();
-                  if($('input').hasClass('updateForm')){
-                        updateButtonSubmit();
-                        return;
-                  } else {
-                        handleAddClicked();
-                  }
+                  updateButtonSubmit();
             }
-            });
+      });
+      $(".addForm").keypress(function(event) {
+            if (event.which == 13) {
+                  event.preventDefault();
+                  handleFormInputs();
+            }
+      });
 }
 function sortStudents(column){
+      $('.preloader-wrapper').removeClass('displayNone');
       var sortedStudents = [];
       $('tbody tr').replaceWith();
       function sortStudentsAsc(sortField){
@@ -196,6 +210,7 @@ function sortStudents(column){
                         sortedStudents.push(student);
                   });
                   addExternalDataStudent(sortedStudents);
+                  $('.preloader-wrapper').addClass('displayNone');
             });
       }
       function sortStudentsDesc(sortField){
@@ -212,33 +227,50 @@ function sortStudents(column){
                         sortedStudents.push(student);
                   });
                   addExternalDataStudent(sortedStudents);
+                  $('.preloader-wrapper').addClass('displayNone');
             });
       }
+      debugger;
       switch (column) {
             case "name":
+                  $('.subjectSort, .gradeSort').addClass('displayNone');
                   if(sortedSwitch.name === 0){
+                        $('.nameAscending').removeClass('displayNone');
+                        $('.nameDescending').addClass('displayNone');
                         sortStudentsAsc("name");
                         sortedSwitch.name = 1;
                         return;
                   }
+                  $('.nameAscending').addClass('displayNone');
+                  $('.nameDescending').removeClass('displayNone');
                   sortStudentsDesc("name");
                   sortedSwitch.name = 0;
                   break;
             case "subject":
+                  $('.nameSort, .gradeSort').addClass('displayNone');
                   if(sortedSwitch.subject === 0){
+                        $('.subjectAscending').removeClass('displayNone');
+                        $('.subjectDescending').addClass('displayNone');
                         sortStudentsAsc("subject");
                         sortedSwitch.subject = 1;
                         return;
                   }
+                  $('.subjectAscending').addClass('displayNone');
+                  $('.subjectDescending').removeClass('displayNone');
                   sortStudentsDesc("subject");
                   sortedSwitch.subject = 0;
                   break;
             case "grade":
+                  $('.nameSort, .subjectSort').addClass('displayNone');
                   if(sortedSwitch.grade === 0){
+                        $('.gradeAscending').removeClass('displayNone');
+                        $('.gradeDescending').addClass('displayNone');
                         sortStudentsAsc("grade");
                         sortedSwitch.grade = 1;
                         return;
                   }
+                  $('.gradeAscending').addClass('displayNone');
+                  $('.gradeDescending').removeClass('displayNone');
                   sortStudentsDesc("grade");
                   sortedSwitch.grade = 0;
                   break;
@@ -297,6 +329,7 @@ function handleFormInputs(){
                   return false;
             } else {
                   handleAddClicked();
+                  $('input').removeClass('invalid');
             }
       }
 }
@@ -310,7 +343,10 @@ function handleUpdateInputs(){
                   M.toast({html: `Form must be filled out`, classes: 'red darken-1'});
                   return false;
             } else {
+                  name = name.toUpperCase();
+                  subject = subject.toUpperCase();
                   handleAddClicked();
+                  $('input').removeClass('invalid');
             }
       }
 }

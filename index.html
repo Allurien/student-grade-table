@@ -57,19 +57,19 @@
                     <div class="row col s12 addCard center">
                         <div class="input-field col s12 m4">
                             <i class="small material-icons prefix">person</i>
-                            <input type="text" class="validate addNameField" name="studentName" id="studentName" required>
+                            <input type="text" class="validate addNameField addForm" name="studentName" id="studentName" required>
                             <span class="helper-text" data-error="Please enter a name"></span>
                             <label for="studentName">Name</label>
                         </div>
                         <div class="input-field col s12 m4">
                             <i class="small material-icons prefix">list</i>
-                            <input type="text" class="validate addSubjectField" name="subject" id="subject" required>
+                            <input type="text" class="validate addSubjectField addForm" name="subject" id="subject" required>
                             <span class="helper-text" data-error="Please enter a subject"></span>
                             <label for="subject">Subject</label>
                         </div>
                         <div class="input-field col s12 m4">
                             <i class="small material-icons prefix">grade</i>
-                            <input type="number" pattern="[0-9]{2}" maxlength="3" min="0" max="100" class="validate addGradeField" name="studentGrade" id="studentGrade" required>
+                            <input type="number" pattern="[0-9]{2}" maxlength="3" min="0" max="100" class="addForm validate addGradeField" name="studentGrade" id="studentGrade" required>
                             <span class="helper-text" data-error="Please enter a grade"></span>
                             <label for="studentGrade">Grade</label>
                         </div>
@@ -83,12 +83,41 @@
             <div class="center col s12 row studentListing">
                 <div class="">
                     <h4 class=''>Student List</h4>
+                    <div class="preloader-wrapper big active displayNone">
+                            <div class="spinner-layer spinner-blue-only">
+                                <div class="circle-clipper left">
+                                <div class="circle"></div>
+                                </div><div class="gap-patch">
+                                <div class="circle"></div>
+                                </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                                </div>
+                            </div>
+                    </div>
                     <table class="highlight centered col s12 studentTable">
                         <thead >
                             <tr>
-                                <th class="center" onclick="sortStudents('name')">Name</th>
-                                <th class="center" onclick="sortStudents('subject')">Subject</th>
-                                <th class="center" onclick="sortStudents('grade')">Grade</th>
+                                <th class="center" onclick="sortStudents('name')">
+                                    <div class="center tableLabel">
+                                        <i class="small material-icons nameSort sortIcon nameAscending">arrow_drop_up</i>
+                                        Name
+                                        <i class="small material-icons nameSort sortIcon displayNone nameDescending">arrow_drop_down</i>
+                                    </div>
+                                </th>
+                                <th class="center tableLabel" onclick="sortStudents('subject')">
+                                    <div class="center tableLabel">
+                                        <i class="small material-icons subjectSort sortIcon displayNone subjectAscending">arrow_drop_up</i>
+                                        Subject
+                                        <i class="small material-icons subjectSort sortIcon displayNone subjectDescending">arrow_drop_down</i>
+                                    </div>
+                                </th>
+                                <th class="center tableLabel" onclick="sortStudents('grade')">
+                                    <div class="center tableLabel">
+                                        <i class="small material-icons gradeSort sortIcon displayNone gradeAscending">arrow_drop_up</i>
+                                        Grade
+                                        <i class="small material-icons gradeSort sortIcon displayNone gradeDescending">arrow_drop_down</i>
+                                    </div>
+                                </th>
                                 <th></th>
                                 <th></th>
                             </tr>
