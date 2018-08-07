@@ -8,6 +8,8 @@ body {
 }
 td {
     width: 20%;
+    padding: 10px 0;
+    width: 15%;
 }
 .card-panel {
     margin: 0;
@@ -23,9 +25,8 @@ h4 {
 h5 {
     margin: 0.093333rem 0 .656rem 0;
 }
-td {
-    padding: 10px 0;
-    width: 15%;
+th {
+    vertical-align: unset;
 }
 .modal {
     overflow-y: inherit;
@@ -79,6 +80,10 @@ td {
 }
 .sortIcon{
     vertical-align: middle;
+}
+.preloader-wrapper{
+    width: 30%;
+    margin: auto;
 }
 /* Form Color Changes */
 /* label color */

@@ -83,38 +83,32 @@
             <div class="center col s12 row studentListing">
                 <div class="">
                     <h4 class=''>Student List</h4>
-                    <div class="preloader-wrapper big active displayNone">
-                            <div class="spinner-layer spinner-blue-only">
-                                <div class="circle-clipper left">
-                                <div class="circle"></div>
-                                </div><div class="gap-patch">
-                                <div class="circle"></div>
-                                </div><div class="circle-clipper right">
-                                <div class="circle"></div>
+                    <div class="preloader-wrapper displayNone">
+                            <div class="progress">
+                                    <div class="indeterminate"></div>
                                 </div>
-                            </div>
                     </div>
                     <table class="highlight centered col s12 studentTable">
                         <thead >
                             <tr>
                                 <th class="center" onclick="sortStudents('name')">
                                     <div class="center tableLabel">
-                                        <i class="small material-icons nameSort sortIcon nameAscending">arrow_drop_up</i>
                                         Name
+                                        <i class="small material-icons nameSort sortIcon nameAscending">arrow_drop_up</i>
                                         <i class="small material-icons nameSort sortIcon displayNone nameDescending">arrow_drop_down</i>
                                     </div>
                                 </th>
                                 <th class="center tableLabel" onclick="sortStudents('subject')">
                                     <div class="center tableLabel">
-                                        <i class="small material-icons subjectSort sortIcon displayNone subjectAscending">arrow_drop_up</i>
                                         Subject
+                                        <i class="small material-icons subjectSort sortIcon displayNone subjectAscending">arrow_drop_up</i>
                                         <i class="small material-icons subjectSort sortIcon displayNone subjectDescending">arrow_drop_down</i>
                                     </div>
                                 </th>
                                 <th class="center tableLabel" onclick="sortStudents('grade')">
                                     <div class="center tableLabel">
-                                        <i class="small material-icons gradeSort sortIcon displayNone gradeAscending">arrow_drop_up</i>
                                         Grade
+                                        <i class="small material-icons gradeSort sortIcon displayNone gradeAscending">arrow_drop_up</i>
                                         <i class="small material-icons gradeSort sortIcon displayNone gradeDescending">arrow_drop_down</i>
                                     </div>
                                 </th>
