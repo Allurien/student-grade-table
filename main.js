@@ -10,6 +10,7 @@ function initializeApp(){
       handleGetDataClick();
       $('#updateModal').modal();
       $('#deleteModal').modal();
+      $('.scrollspy').scrollSpy();
       if(!navigator.onLine){
             $('.offline').removeClass('displayNone');
       }
@@ -230,7 +231,6 @@ function sortStudents(column){
                   $('.preloader-wrapper').addClass('displayNone');
             });
       }
-      debugger;
       switch (column) {
             case "name":
                   $('.subjectSort, .gradeSort').addClass('displayNone');
